@@ -1,0 +1,6 @@
+# Папки
+*build-*
+
+# Файлы
+*.pro.user
+*.pro.user.*
