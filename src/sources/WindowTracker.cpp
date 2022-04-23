@@ -1,4 +1,5 @@
 #include "WindowTracker.h"
+#include <winuser.h>
 #include <QDebug>
 
 WindowTracker::WindowTracker(QObject* parent)
@@ -14,7 +15,7 @@ WindowTracker::WindowTracker(QObject* parent)
 void WindowTracker::getWindowFocus() {
     HWND tempHwnd = GetForegroundWindow();
 
-    if (tempHwnd == hWnd) {
+    if (tempHwnd == hWnd || tempHwnd == FindWindow(nullptr, _T("VimeAdvisor_Overlay_0"))) {
         if (!hasFocus) {
             emit windowFocusChanged(true);
             hasFocus = true;
@@ -26,6 +27,19 @@ void WindowTracker::getWindowFocus() {
     if (hasFocus) {
         emit windowFocusChanged(false);
         hasFocus = false;
+    }
+}
+
+///
+/// \brief setWindowFocus - Функция устанавливает фокус на отслеживаемое окно.
+///
+void WindowTracker::setWindowFocus() {
+    qDebug() << "IT USES";
+
+    HWND hWNd = FindWindow(nullptr, _T(WINDOW_NAME));
+
+    if (hWNd != nullptr) {
+        SetForegroundWindow(hWNd);
     }
 }
 
@@ -106,3 +120,4 @@ void WindowTracker::resetWindowTracker() {
 void WindowTracker::getWindowBorders() {
     emit newWindowBorders(GetSystemMetrics(SM_CYFRAME), GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CYCAPTION));
 }
+

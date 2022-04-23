@@ -4,7 +4,7 @@ import QtQuick.Controls 2.15
 
 import WindowTracker 1.0
 
-ApplicationWindow {
+Window {
     x: -32000
     y: -32000
 
@@ -17,21 +17,49 @@ ApplicationWindow {
 
     color: "#00000000"
 
-    flags: Qt.ToolTip | Qt.FramelessWindowHint | Qt.WA_TranslucentBackground | Qt.X11BypassWindowManagerHint
-           | Qt.WindowStaysOnTopHint | Qt.WindowTransparentForInput
+    flags: Qt.ToolTip | Qt.FramelessWindowHint | /*| Qt.X11BypassWindowManagerHint*/
+            Qt.WindowStaysOnTopHint /*| Qt.WindowTransparentForInput*/
 
-    title: "VimeAdvisor_Overlay"
+    WindowTracker {
+        id: windowTracker
+    }
+
+    title: "VimeAdvisor_Overlay_0"
 
     Rectangle {
+        id: rect
+
+        height: 100
+        width: 100
+
+
         color: "red"
 
         opacity: 0.5
 
         anchors {
-            fill: parent
+            centerIn: parent
 
-            margins: (isFullscreen) ? 0 : borderWidth
-            topMargin: (isFullscreen) ? 0 : titleBarHeight
+            //fill: parent
+
+            //margins: (isFullscreen) ? 0 : borderWidth
+            //topMargin: (isFullscreen) ? 0 : titleBarHeight
+        }
+    }
+
+    Button {
+        anchors.right: rect.right
+        anchors.top: rect.top
+
+        text: "TRY TO CLICK ON ME DUDE"
+
+        MouseArea {
+            onClicked: {
+                windowTracker.setWindowFocus()
+                console.log("LOL BTW HOW Y DO THAT?")
+            }
+
+            anchors.fill: parent
         }
     }
 
@@ -41,8 +69,8 @@ ApplicationWindow {
     }
 
     function changeSize(nHeight, nWidth) {
-        height = nHeight
-        width = nWidth
+        height = 200//nHeight
+        width = 300//nWidth
     }
 
     function setWindowFrame(nTitleBarHeight, nBorderWidth) {

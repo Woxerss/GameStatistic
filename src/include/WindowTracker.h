@@ -34,6 +34,11 @@ public slots:
     /// \brief getWindowBorders - Функция получает размеры рамки окна в Windows.
     ///
     void getWindowBorders();
+
+    ///
+    /// \brief setWindowFocus - Функция устанавливает фокус на отслеживаемое окно.
+    ///
+    void setWindowFocus();
 signals:
     ///
     /// \brief windowPositionChanged - Сигнал, который вызывается при изменении позиции отслеживаемого окна в QML.
@@ -61,7 +66,7 @@ signals:
     void windowFullscreenChanged(const bool);
 
     ///
-    /// \brief newWindowBorders - Сигнал, который вызывается для передачи размеров рамки окна Windows.
+    /// \brief newWindowBorders - Сигнал, который вызывается для передачи размеров рамки окна Windows в QML.
     ///
     void newWindowBorders(const int, const int);
 
