@@ -4,10 +4,12 @@ import QtQuick.Controls 2.15
 
 import WindowTracker 1.0
 
+import "qrc:/overlay"
+
 ApplicationWindow {
     id: root
 
-    property var window
+    property var overlayWindow
 
     width: 640
     height: 480
@@ -26,66 +28,66 @@ ApplicationWindow {
 
         onClicked: {
             if (!isOpened) {
-                window.show()
-                isOpened = true
-                console.log("1")
                 timer.start()
+                overlayWindow.show()
+                isOpened = true
+                console.log("OVERLAY ON")
             } else {
-                //window.close()
-                window.hide()
-                isOpened = false
-                console.log("2")
                 timer.stop()
+                overlayWindow.hide()
+                windowTracker.resetWindowTracker();
+                isOpened = false
+                console.log("OVERLAY OFF")
             }
         }
     }
 
     Component.onCompleted: {
-        var component = Qt.createComponent("TestOverlayElement.qml")
-        window = component.createObject(root)
-        window.hide()
+        var component = Qt.createComponent("qrc:/overlay/TestOverlayElement.qml")
+        overlayWindow = component.createObject()
+        overlayWindow.hide()
     }
 
     Timer {
         id: timer
-        interval: 100
+        interval: 500
         repeat: true
 
         onTriggered: {
             windowTracker.getWindowParameters()
+            windowTracker.getWindowFocus()
         }
     }
 
     Connections {
         target: windowTracker
 
-        onNewWindowPosition: function(wX, wY) {
-            window.changePosition(wX, wY)
-            //console.log("WindowPositionChanged")
-            //console.log(wX);
-            //console.log(wY);
+        onWindowPositionChanged: function(wX, wY) {
+            overlayWindow.changePosition(wX, wY)
         }
 
-        onNewWindowSize: function(wHeight, wWidth) {
-            window.changeSize(wHeight, wWidth)
-            //console.log("WindowSizeChanged")
-            //console.log(wHeight);
-            //console.log(wWidth);
+        onWindowSizeChanged: function(wHeight, wWidth) {
+            overlayWindow.changeSize(wHeight, wWidth)
         }
 
-        onWindowMinimized: {
-            window.hide()
-            //console.log("WindowMinimized")
+        onWindowOpenedChanged: function(isOpened) {
+            if (isOpened) {
+                overlayWindow.show()
+                console.log("WINDOW OPENED")
+            } else {
+                overlayWindow.hide()
+                console.log("WINDOW CLOSED")
+            }
         }
 
-        onWindowOpened: {
-            window.show()
-            //console.log("WindowOpened")
-        }
-
-        onWindowClosed: {
-            window.appear()
-            //console.log("WindowClosed")
+        onWindowFocusChanged: function(hasFocus) {
+            if (hasFocus) {
+                overlayWindow.show()
+                console.log("HAS FOCUS")
+            } else {
+                overlayWindow.hide()
+                console.log("FOCUS LOST")
+            }
         }
     }
 }

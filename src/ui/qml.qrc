@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>TestOverlayElement.qml</file>
+        <file>overlay/TestOverlayElement.qml</file>
     </qresource>
 </RCC>

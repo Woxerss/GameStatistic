@@ -15,47 +15,47 @@ public:
 
 public slots:
     ///
-    /// \brief - Функция получает состояние фокуса окна
-    /// \return Возвращает 'true' если фокус на отслеживаемом окне, иначе 'false'
+    /// \brief - Функция получает состояние фокуса отслеживаемого окна.
     ///
-    bool getWindowFocus();
+    void getWindowFocus();
 
     ///
-    /// \brief getWindowParameters - Функция получает параметры окна
+    /// \brief getWindowParameters - Функция получает параметры отслеживаемого окна если они изменились.
     ///
     void getWindowParameters();
 
+    ///
+    /// \brief resetWindowTracker - Функция приводит отслеживание окна к начальному состоянию.
+    /// \details Вызывается при выключении ИЛИ непосредственно перед началом отслеживания окна.
+    ///
+    void resetWindowTracker();
 signals:
     ///
-    /// \brief newWindowPosition - Сигнал, который вызывается при изменении позиции отслеживаемого окна в QML
+    /// \brief windowPositionChanged - Сигнал, который вызывается при изменении позиции отслеживаемого окна в QML.
     ///
-    void newWindowPosition(const int, const int);
+    void windowPositionChanged(const int, const int);
 
     ///
-    /// \brief newWindowSize - Сигнал, который вызывается при изменении размера отслеживаемого окна в QML
+    /// \brief windowSizeChanged - Сигнал, который вызывается при изменении размера отслеживаемого окна в QML.
     ///
-    void newWindowSize(const int, const int);
+    void windowSizeChanged(const int, const int);
 
     ///
-    /// \brief windowHidden - Сигнал, который вызывается при сворачивании окна в QML
+    /// \brief windowOpenedChanged - Сигнал, который вызывается при открытии/закрытии отслеживаемого окна в QML.
     ///
-    void windowMinimized();
+    void windowOpenedChanged(const bool);
 
     ///
-    /// \brief windowOpened - Сигнал, который вызывается при разворачивании/открытия окна в QML
+    /// \brief windowFocusChanged - Сигнал, который вызывается при изменения фокуса отслеживаемого окна в QML.
     ///
-    void windowOpened();
-
-    ///
-    /// \brief gameClosed - Сигнал, который вызывается при закрытии окна в QML
-    ///
-    void windowClosed();
+    void windowFocusChanged(const bool);
 
 private:
-    bool isOpened = false;               // Окно открыто
-    bool isMinimized = false;            // Окно свернуто
-    HWND hWnd = nullptr;                 // Хэндл окна игры
-    RECT rect = {0, 0, 0, 0};            // Координаты углов окна
+    bool isOpened = false;              // Окно открыто
+    bool hasFocus = true;               // Окно имеет фокус
+
+    HWND hWnd = nullptr;                // Хэндл окна игры
+    RECT rect = {0, 0, 0, 0};           // Координаты углов окна
 };
 
 #endif // WINDOWTRACKER_H
