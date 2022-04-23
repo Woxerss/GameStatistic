@@ -28,29 +28,26 @@ ApplicationWindow {
 
         onClicked: {
             if (!isOpened) {
-                timer.start()
-                overlayWindow.show()
+                showOverlay()
                 isOpened = true
-                console.log("OVERLAY ON")
             } else {
-                timer.stop()
-                overlayWindow.hide()
-                windowTracker.resetWindowTracker();
+                hideOverlay()
                 isOpened = false
-                console.log("OVERLAY OFF")
             }
         }
     }
 
     Component.onCompleted: {
-        var component = Qt.createComponent("qrc:/overlay/TestOverlayElement.qml")
+        var component = Qt.createComponent("qrc:/overlay/GameOverlay.qml")
         overlayWindow = component.createObject()
         overlayWindow.hide()
+
+        windowTracker.getWindowBorders()
     }
 
     Timer {
         id: timer
-        interval: 500
+        interval: 1000
         repeat: true
 
         onTriggered: {
@@ -73,21 +70,37 @@ ApplicationWindow {
         onWindowOpenedChanged: function(isOpened) {
             if (isOpened) {
                 overlayWindow.show()
-                console.log("WINDOW OPENED")
             } else {
                 overlayWindow.hide()
-                console.log("WINDOW CLOSED")
             }
         }
 
         onWindowFocusChanged: function(hasFocus) {
             if (hasFocus) {
                 overlayWindow.show()
-                console.log("HAS FOCUS")
             } else {
                 overlayWindow.hide()
-                console.log("FOCUS LOST")
             }
         }
+
+        onWindowFullscreenChanged: function(isFullscreen) {
+            overlayWindow.setFullscreen(isFullscreen)
+        }
+
+        onNewWindowBorders: function(nBorderWidth, nTitleBarHeight) {
+            overlayWindow.setWindowFrame(nTitleBarHeight, nBorderWidth)
+        }
+    }
+
+    function showOverlay() {
+        overlayWindow.changePosition(-32000, -32000)
+        overlayWindow.show()
+        timer.start()
+    }
+
+    function hideOverlay() {
+        timer.stop()
+        overlayWindow.hide()
+        windowTracker.resetWindowTracker();
     }
 }

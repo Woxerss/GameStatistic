@@ -4,6 +4,8 @@
 WindowTracker::WindowTracker(QObject* parent)
     : QObject(parent)
 {
+    screenHeight = GetSystemMetrics(SM_CXSCREEN);
+    screenWidth = GetSystemMetrics(SM_CYSCREEN);
 }
 
 ///
@@ -67,6 +69,20 @@ void WindowTracker::getWindowParameters() {
             isEqual = false;
         }
 
+        // Проверка на полноэкранный режим
+        if (tempRect.right - tempRect.left == screenHeight &&
+                tempRect.bottom - tempRect.top == screenWidth) {
+            if (!isFullscreen) {
+                emit windowFullscreenChanged(true);
+                isFullscreen = true;
+            }
+        } else {
+            if (isFullscreen) {
+                emit windowFullscreenChanged(false);
+                isFullscreen = false;
+            }
+        }
+
         if (!isEqual) {
             rect = tempRect;
         }
@@ -82,4 +98,11 @@ void WindowTracker::resetWindowTracker() {
     hasFocus = true;               // Окно имеет фокус
     hWnd = nullptr;                // Хэндл окна игры
     rect = {0, 0, 0, 0};           // Координаты углов окна
+}
+
+///
+/// \brief getWindowBorders - Функция получает размеры рамки окна в Windows.
+///
+void WindowTracker::getWindowBorders() {
+    emit newWindowBorders(GetSystemMetrics(SM_CYFRAME), GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CYCAPTION));
 }

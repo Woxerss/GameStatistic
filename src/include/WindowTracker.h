@@ -29,6 +29,11 @@ public slots:
     /// \details Вызывается при выключении ИЛИ непосредственно перед началом отслеживания окна.
     ///
     void resetWindowTracker();
+
+    ///
+    /// \brief getWindowBorders - Функция получает размеры рамки окна в Windows.
+    ///
+    void getWindowBorders();
 signals:
     ///
     /// \brief windowPositionChanged - Сигнал, который вызывается при изменении позиции отслеживаемого окна в QML.
@@ -50,9 +55,23 @@ signals:
     ///
     void windowFocusChanged(const bool);
 
+    ///
+    /// \brief windowFullscreenChanged - Сигнал, который вызывается при изменения полноэкранного режима отслеживаемого окна в QML.
+    ///
+    void windowFullscreenChanged(const bool);
+
+    ///
+    /// \brief newWindowBorders - Сигнал, который вызывается для передачи размеров рамки окна Windows.
+    ///
+    void newWindowBorders(const int, const int);
+
 private:
     bool isOpened = false;              // Окно открыто
     bool hasFocus = true;               // Окно имеет фокус
+    bool isFullscreen = false;          // Окно в полноэкранном режиме
+
+    int screenHeight = 0;               // Высота основного экрана
+    int screenWidth = 0;                // Ширина основного экрана
 
     HWND hWnd = nullptr;                // Хэндл окна игры
     RECT rect = {0, 0, 0, 0};           // Координаты углов окна
