@@ -2,8 +2,6 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 
-import WindowTracker 1.0
-
 Window {
     x: -32000
     y: -32000
@@ -19,10 +17,6 @@ Window {
 
     flags: Qt.ToolTip | Qt.FramelessWindowHint | /*| Qt.X11BypassWindowManagerHint*/
             Qt.WindowStaysOnTopHint /*| Qt.WindowTransparentForInput*/
-
-    WindowTracker {
-        id: windowTracker
-    }
 
     title: "VimeAdvisor_Overlay_0"
 
@@ -55,13 +49,14 @@ Window {
 
         MouseArea {
             onClicked: {
-                windowTracker.setWindowFocus()
-                console.log("LOL BTW HOW Y DO THAT?")
+                deactivateOverlay()
             }
 
             anchors.fill: parent
         }
     }
+
+    signal deactivateOverlay()
 
     function changePosition(nX, nY) {
         x = nX
