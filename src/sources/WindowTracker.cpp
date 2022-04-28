@@ -34,8 +34,6 @@ void WindowTracker::getWindowFocus() {
 /// \brief setWindowFocus - Функция устанавливает фокус на отслеживаемое окно.
 ///
 void WindowTracker::setWindowFocus() {
-    qDebug() << "IT USES";
-
     HWND hWNd = FindWindow(nullptr, _T(WINDOW_NAME));
 
     if (hWNd != nullptr) {
