@@ -37,21 +37,6 @@ ApplicationWindow {
         }
     }
 
-    Button {
-        onClicked: popup.open()
-
-        Popup {
-            id: popup
-
-            parent: Overlay.overlay
-
-            x: Math.round((parent.width - width) / 2)
-            y: Math.round((parent.height - height) / 2)
-            width: 100
-            height: 100
-        }
-    }
-
     Component.onCompleted: {
         var component = Qt.createComponent("qrc:/overlay/GameOverlay.qml")
         overlayWindow = component.createObject()
@@ -72,19 +57,26 @@ ApplicationWindow {
     }
 
     Connections {
+        target: overlayWindow
+
+        function onDeactivateOverlay() {
+            console.log("DEACTIVATE")
+            windowTracker.setWindowFocus()
+        }
+    }
+
+    Connections {
         target: windowTracker
 
-        onWindowPositionChanged: function(wX, wY) {
-            popup.x = wX
-            popup.y = wY
+        function onWindowPositionChanged(wX, wY) {
             overlayWindow.changePosition(wX, wY)
         }
 
-        onWindowSizeChanged: function(wHeight, wWidth) {
+        function onWindowSizeChanged(wHeight, wWidth) {
             overlayWindow.changeSize(wHeight, wWidth)
         }
 
-        onWindowOpenedChanged: function(isOpened) {
+        function onWindowOpenedChanged(isOpened) {
             if (isOpened) {
                 overlayWindow.show()
             } else {
@@ -92,7 +84,7 @@ ApplicationWindow {
             }
         }
 
-        onWindowFocusChanged: function(hasFocus) {
+        function onWindowFocusChanged(hasFocus) {
             if (hasFocus) {
                 overlayWindow.show()
             } else {
@@ -100,11 +92,11 @@ ApplicationWindow {
             }
         }
 
-        onWindowFullscreenChanged: function(isFullscreen) {
+        function onWindowFullscreenChanged(isFullscreen) {
             overlayWindow.setFullscreen(isFullscreen)
         }
 
-        onNewWindowBorders: function(nBorderWidth, nTitleBarHeight) {
+        function onNewWindowBorders(nBorderWidth, nTitleBarHeight) {
             overlayWindow.setWindowFrame(nTitleBarHeight, nBorderWidth)
         }
     }
