@@ -16,43 +16,22 @@ Window {
     color: "#00000000"
 
     flags: Qt.ToolTip | Qt.FramelessWindowHint | /*| Qt.X11BypassWindowManagerHint*/
-            Qt.WindowStaysOnTopHint /*| Qt.WindowTransparentForInput*/
+            Qt.WindowStaysOnTopHint | Qt.WindowTransparentForInput
 
     title: "VimeAdvisor_Overlay_0"
 
     Rectangle {
         id: rect
 
-        height: 100
-        width: 100
-
-
         color: "red"
 
         opacity: 0.5
 
         anchors {
-            centerIn: parent
+            fill: parent
 
-            //fill: parent
-
-            //margins: (isFullscreen) ? 0 : borderWidth
-            //topMargin: (isFullscreen) ? 0 : titleBarHeight
-        }
-    }
-
-    Button {
-        anchors.right: rect.right
-        anchors.top: rect.top
-
-        text: "TRY TO CLICK ON ME DUDE"
-
-        MouseArea {
-            onClicked: {
-                deactivateOverlay()
-            }
-
-            anchors.fill: parent
+            margins: (isFullscreen) ? 0 : borderWidth
+            topMargin: (isFullscreen) ? 0 : titleBarHeight
         }
     }
 
@@ -64,8 +43,8 @@ Window {
     }
 
     function changeSize(nHeight, nWidth) {
-        height = 200//nHeight
-        width = 300//nWidth
+        height = nHeight
+        width = nWidth
     }
 
     function setWindowFrame(nTitleBarHeight, nBorderWidth) {
