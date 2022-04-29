@@ -1,48 +1,130 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+import Qt.labs.platform 1.1
 
 import WindowTracker 1.0
+import StatisticCollector 1.0
 
 import "qrc:/overlay"
 
 ApplicationWindow {
     id: root
 
-    property var overlayWindow
+    /* Оверлей */
+    property var overlayMainWindow
+    property bool isOverlayOpened: false
+
+    /* Сборщик статистики */
+    property bool isChatProcessing: false
 
     width: 640
     height: 480
     visible: true
     title: qsTr("VimeAdvisor")
 
-    WindowTracker {
-        id: windowTracker
-    }
+    /* Меню в системном трее */
+    SystemTrayIcon {
+        id: tray
 
-    Button {
-        anchors.centerIn: parent
-        text: qsTr("Click me")
+        visible: true
 
-        property bool isOpened: false
+        icon.source: "qrc:/icons/VimeAdvisor.png"
 
-        onClicked: {
-            if (!isOpened) {
-                showOverlay()
-                isOpened = true
-            } else {
-                hideOverlay()
-                isOpened = false
+        menu: Menu {
+            MenuItem {
+                text: (root.visible) ? qsTr("Свернуть") : qsTr("Показать")
+
+                onTriggered: {
+                    if (root.visible) {
+                        hide()
+                    } else {
+                        show()
+                    }
+                }
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: (isOverlayOpened) ? qsTr("Выключить оверлей") : qsTr("Включить оверлей")
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: qsTr("Закрыть")
+                onTriggered: {
+                    if (!root.visible) {
+                        show()
+                    }
+
+                    close()
+                }
             }
         }
     }
 
-    Component.onCompleted: {
-        var component = Qt.createComponent("qrc:/overlay/GameOverlay.qml")
-        overlayWindow = component.createObject()
-        overlayWindow.hide()
+    /* Отслеживание окна игры */
+    WindowTracker {
+        id: windowTracker
+    }
 
-        windowTracker.getWindowBorders()
+    /* Ассинхронный сборщик статистики */
+    StatisticCollector {
+        id: statisticCollector
+    }
+
+    /* Основное окно программы */
+    Column {
+        anchors.centerIn: parent
+        spacing: 5
+
+        Button {
+            height: 60
+            width: 140
+
+            opacity: (isOverlayOpened) ? 0.5 : 1
+
+            text: (isOverlayOpened) ? qsTr("End overlay") : qsTr("Start overlay")
+
+            onClicked: {
+                if (!isOverlayOpened) {
+                    showOverlay()
+                    isOverlayOpened = true
+                } else {
+                    hideOverlay()
+                    isOverlayOpened = false
+                }
+            }
+        }
+
+        Button {
+            height: 60
+            width: 140
+
+            opacity: (isChatProcessing) ? 0.5 : 1
+
+            text: (isChatProcessing) ? qsTr("End chat processing") : qsTr("Start chat processing")
+
+            onClicked: {
+                if (!isChatProcessing) {
+                    statisticCollector.startChatProcessing()
+                    isChatProcessing = true
+                } else {
+                    statisticCollector.stopChatProcessing()
+                    isChatProcessing = false
+                }
+            }
+        }
+    }
+
+    /* Инициализация при загрузке компонента */
+    Component.onCompleted: {
+        /* Инициализация сборщика статистики */
+        statisticCollector.start()
+
+        console.log("Component on Completed")
     }
 
     Timer {
@@ -57,10 +139,9 @@ ApplicationWindow {
     }
 
     Connections {
-        target: overlayWindow
+        target: overlayMainWindow
 
         function onDeactivateOverlay() {
-            console.log("DEACTIVATE")
             windowTracker.setWindowFocus()
         }
     }
@@ -69,47 +150,54 @@ ApplicationWindow {
         target: windowTracker
 
         function onWindowPositionChanged(wX, wY) {
-            overlayWindow.changePosition(wX, wY)
+            overlayMainWindow.changePosition(wX, wY)
         }
 
         function onWindowSizeChanged(wHeight, wWidth) {
-            overlayWindow.changeSize(wHeight, wWidth)
+            overlayMainWindow.changeSize(wHeight, wWidth)
         }
 
         function onWindowOpenedChanged(isOpened) {
             if (isOpened) {
-                overlayWindow.show()
+                overlayMainWindow.show()
             } else {
-                overlayWindow.hide()
+                overlayMainWindow.hide()
             }
         }
 
         function onWindowFocusChanged(hasFocus) {
             if (hasFocus) {
-                overlayWindow.show()
+                overlayMainWindow.show()
             } else {
-                overlayWindow.hide()
+                overlayMainWindow.hide()
             }
         }
 
         function onWindowFullscreenChanged(isFullscreen) {
-            overlayWindow.setFullscreen(isFullscreen)
+            overlayMainWindow.setFullscreen(isFullscreen)
         }
 
         function onNewWindowBorders(nBorderWidth, nTitleBarHeight) {
-            overlayWindow.setWindowFrame(nTitleBarHeight, nBorderWidth)
+            overlayMainWindow.setWindowFrame(nTitleBarHeight, nBorderWidth)
         }
     }
 
+
+
     function showOverlay() {
-        overlayWindow.changePosition(-32000, -32000)
-        overlayWindow.show()
+        /* Инициализация оверлея */
+        windowTracker.getWindowBorders()
+        var component = Qt.createComponent("qrc:/overlay/GameOverlay.qml")
+        overlayMainWindow = component.createObject()
+        overlayMainWindow.changePosition(-32000, -32000)
+        overlayMainWindow.show()
         timer.start()
     }
 
     function hideOverlay() {
         timer.stop()
-        overlayWindow.hide()
-        windowTracker.resetWindowTracker();
+        overlay = Component.destruction()
+        //overlayMainWindow.hide()
+        //windowTracker.resetWindowTracker();
     }
 }

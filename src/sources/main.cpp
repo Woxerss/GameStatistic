@@ -3,6 +3,7 @@
 #include <QQmlContext>
 
 #include "WindowTracker.h"
+#include "statistic/StatisticCollector.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +14,7 @@ int main(int argc, char *argv[])
 
     // Подключаем C++ к QML
     qmlRegisterType<WindowTracker>("WindowTracker", 1, 0, "WindowTracker");
+    qmlRegisterType<StatisticCollector>("StatisticCollector", 1, 0, "StatisticCollector");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

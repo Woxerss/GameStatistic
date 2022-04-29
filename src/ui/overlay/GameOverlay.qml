@@ -55,4 +55,8 @@ Window {
     function setFullscreen(nIsFullscreen) {
         isFullscreen = nIsFullscreen
     }
+
+    Component.onDestroyed: {
+        console.log("Overlay destroyed")
+    }
 }

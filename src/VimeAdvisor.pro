@@ -4,14 +4,20 @@ LIBS += -lUser32
 
 CONFIG += c++17
 
+
 HEADERS += \
+    include/statistic/ChatProcessing.h \
+    include/statistic/StatisticCollector.h \
     include/WindowTracker.h
 
 SOURCES += \
+    sources/statistic/ChatProcessing.cpp \
+    sources/statistic/StatisticCollector.cpp \
     sources/WindowTracker.cpp \
     sources/main.cpp
 
 RESOURCES += \
+    assets/assets.qrc \
     ui/qml.qrc
 
 INCLUDEPATH += $$PWD/include

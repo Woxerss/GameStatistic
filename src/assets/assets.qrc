@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/show.svg</file>
+        <file>icons/VimeAdvisor.png</file>
+    </qresource>
+</RCC>
