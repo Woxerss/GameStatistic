@@ -4,6 +4,8 @@
 /// \brief run - Запускает поток обработки статистики.
 ///
 void StatisticCollector::run() {
+    isRunning = true;
+
     /* Подключаем сигналы к слотам (Обрабатываем события чата) */
     connect(chatProcessing, SIGNAL(coinsAdded(const int)), this, SLOT(onCoinsAdded(const int)));
     connect(chatProcessing, SIGNAL(playerJoinedMatch(const QString, const QString)), this, SLOT(onPlayerJoinedMatch(QString, const QString)));
@@ -11,13 +13,9 @@ void StatisticCollector::run() {
     connect(chatProcessing, SIGNAL(finished()), this, SLOT(onChatProcessingFinished()));
     connect(chatProcessing, SIGNAL(started()), this, SLOT(onChatProcessingStarted()));
 
-    isRunning = true;
-
     while (isRunning || chatProcessingRunning) {
         QThread::msleep(1000);
     }
-
-    return;
 }
 
 ///

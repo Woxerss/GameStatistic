@@ -5,10 +5,16 @@ import Qt.labs.platform 1.1
 
 import StatisticCollector 1.0
 
+import "qrc:/overlay"
+
 ApplicationWindow {
     id: root
 
+    property var overlayComponent
+    property var mainOverlayWindow
+
     /* Сборщик статистики */
+    property bool isOverlayRun: false
     property bool isStatisticRun: false
     property bool isChatProcessing: false
 
@@ -40,19 +46,30 @@ ApplicationWindow {
             MenuSeparator { }
 
             MenuItem {
-                //text: (isOverlayOpened) ? qsTr("Выключить оверлей") : qsTr("Включить оверлей")
+                text: (isOverlayRun) ? qsTr("Выключить оверлей") : qsTr("Включить оверлей")
             }
 
             MenuSeparator { }
 
             MenuItem {
                 text: qsTr("Закрыть")
+
                 onTriggered: {
                     if (!root.visible) {
                         show()
                     }
 
                     close()
+                }
+            }
+        }
+
+        onActivated: {
+            console.log(reason)
+
+            if (reason === 2 || reason === 3) {
+                if (!root.visible) {
+                    root.show()
                 }
             }
         }
@@ -70,17 +87,17 @@ ApplicationWindow {
             height: 60
             width: 140
 
-            //opacity: (isOverlayOpened) ? 0.5 : 1
+            opacity: (isOverlayRun) ? 0.5 : 1
 
-            //text: (isOverlayOpened) ? qsTr("End overlay") : qsTr("Start overlay")
+            text: (isOverlayRun) ? qsTr("End overlay") : qsTr("Start overlay")
 
             onClicked: {
-                if (!isOverlayOpened) {
-                    showOverlay()
-                    isOverlayOpened = true
+                if (!isOverlayRun) {
+                    isOverlayRun = true
+                    openOverlay()
                 } else {
-                    hideOverlay()
-                    isOverlayOpened = false
+                    isOverlayRun = false
+                    closeOverlay()
                 }
             }
         }
@@ -91,7 +108,7 @@ ApplicationWindow {
 
             opacity: (isChatProcessing) ? 0.5 : 1
 
-            //text: (isChatProcessing) ? qsTr("End chat processing") : qsTr("Start chat processing")
+            text: (isChatProcessing) ? qsTr("End chat processing") : qsTr("Start chat processing")
 
             onClicked: {
                 if (!isChatProcessing) {
@@ -133,6 +150,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
+        overlayComponent = Qt.createComponent("qrc:/overlay/MainOverlayWindow.qml")
         statisticCollector.start()
     }
 
@@ -144,5 +162,13 @@ ApplicationWindow {
         if (isStatisticRun) {
             statisticCollector.stop()
         }
+    }
+
+    function openOverlay() {
+        mainOverlayWindow = overlayComponent.createObject()
+    }
+
+    function closeOverlay() {
+        mainOverlayWindow.destroy()
     }
 }

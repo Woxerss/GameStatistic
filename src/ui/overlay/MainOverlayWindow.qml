@@ -93,7 +93,11 @@ Window {
         }
     }
 
-    Component.onDestroyed: {
-        console.log("Overlay destroyed")
+    Component.onCompleted: {
+        console.log("Overlay started")
+    }
+
+    Component.onDestruction: {
+        console.log("Overlay destructed")
     }
 }

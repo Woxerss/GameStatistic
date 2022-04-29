@@ -34,7 +34,6 @@ public slots:
     void stopChatProcessing();
 
 private slots:
-
     void onChatProcessingFinished();
 
     void onChatProcessingStarted();
