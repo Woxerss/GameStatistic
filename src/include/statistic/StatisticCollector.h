@@ -19,6 +19,11 @@ public slots:
     void run();
 
     ///
+    /// \brief stop - Останавливает поток сбора статистики.
+    ///
+    void stop();
+
+    ///
     /// \brief startChatProcessing - Запускает поток обработки логов чата.
     ///
     void startChatProcessing();
@@ -29,6 +34,11 @@ public slots:
     void stopChatProcessing();
 
 private slots:
+
+    void onChatProcessingFinished();
+
+    void onChatProcessingStarted();
+
     ///
     /// \brief onCoinsAdded - Обработчик добавления коинов.
     /// \param coins - Количество полученных коинов.
@@ -48,7 +58,8 @@ private slots:
     void onEndMatch();
 
 private:
-    bool chatProcessingActive = false;              // Поток обработки чата активен.
+    bool isRunning = false;
+    bool chatProcessingRunning = false;              // Поток обработки чата активен.
 
     QString chatLogFilePath = "C:/Users/Malee/AppData/Roaming/.vimeworld/minigames/logs/latest.log";
 

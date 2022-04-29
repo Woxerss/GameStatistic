@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>overlay/GameOverlay.qml</file>
+        <file>overlay/MainOverlayWindow.qml</file>
     </qresource>
 </RCC>

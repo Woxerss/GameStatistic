@@ -37,7 +37,6 @@ void ChatProcessing::run() {
         }
 
         if (QThread::currentThread()->isInterruptionRequested()) {
-            qDebug() << "STOP";
             return;
         }
 

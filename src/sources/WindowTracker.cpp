@@ -1,6 +1,4 @@
 #include "WindowTracker.h"
-#include <winuser.h>
-#include <QDebug>
 
 WindowTracker::WindowTracker(QObject* parent)
     : QObject(parent)
@@ -15,7 +13,7 @@ WindowTracker::WindowTracker(QObject* parent)
 void WindowTracker::getWindowFocus() {
     HWND tempHwnd = GetForegroundWindow();
 
-    if (tempHwnd == hWnd || tempHwnd == FindWindow(nullptr, _T("VimeAdvisor_Overlay_0"))) {
+    if (tempHwnd == hWnd || tempHwnd == FindWindow(nullptr, _T("VA_MainOverlay"))) {
         if (!hasFocus) {
             emit windowFocusChanged(true);
             hasFocus = true;

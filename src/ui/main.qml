@@ -3,19 +3,13 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import Qt.labs.platform 1.1
 
-import WindowTracker 1.0
 import StatisticCollector 1.0
-
-import "qrc:/overlay"
 
 ApplicationWindow {
     id: root
 
-    /* Оверлей */
-    property var overlayMainWindow
-    property bool isOverlayOpened: false
-
     /* Сборщик статистики */
+    property bool isStatisticRun: false
     property bool isChatProcessing: false
 
     width: 640
@@ -23,7 +17,6 @@ ApplicationWindow {
     visible: true
     title: qsTr("VimeAdvisor")
 
-    /* Меню в системном трее */
     SystemTrayIcon {
         id: tray
 
@@ -47,7 +40,7 @@ ApplicationWindow {
             MenuSeparator { }
 
             MenuItem {
-                text: (isOverlayOpened) ? qsTr("Выключить оверлей") : qsTr("Включить оверлей")
+                //text: (isOverlayOpened) ? qsTr("Выключить оверлей") : qsTr("Включить оверлей")
             }
 
             MenuSeparator { }
@@ -65,17 +58,10 @@ ApplicationWindow {
         }
     }
 
-    /* Отслеживание окна игры */
-    WindowTracker {
-        id: windowTracker
-    }
-
-    /* Ассинхронный сборщик статистики */
     StatisticCollector {
         id: statisticCollector
     }
 
-    /* Основное окно программы */
     Column {
         anchors.centerIn: parent
         spacing: 5
@@ -84,9 +70,9 @@ ApplicationWindow {
             height: 60
             width: 140
 
-            opacity: (isOverlayOpened) ? 0.5 : 1
+            //opacity: (isOverlayOpened) ? 0.5 : 1
 
-            text: (isOverlayOpened) ? qsTr("End overlay") : qsTr("Start overlay")
+            //text: (isOverlayOpened) ? qsTr("End overlay") : qsTr("Start overlay")
 
             onClicked: {
                 if (!isOverlayOpened) {
@@ -105,7 +91,7 @@ ApplicationWindow {
 
             opacity: (isChatProcessing) ? 0.5 : 1
 
-            text: (isChatProcessing) ? qsTr("End chat processing") : qsTr("Start chat processing")
+            //text: (isChatProcessing) ? qsTr("End chat processing") : qsTr("Start chat processing")
 
             onClicked: {
                 if (!isChatProcessing) {
@@ -119,85 +105,44 @@ ApplicationWindow {
         }
     }
 
-    /* Инициализация при загрузке компонента */
-    Component.onCompleted: {
-        /* Инициализация сборщика статистики */
-        statisticCollector.start()
-
-        console.log("Component on Completed")
-    }
-
     Timer {
-        id: timer
-        interval: 1000
+        id: closingTimer
+
+        interval: 500
         repeat: true
 
         onTriggered: {
-            windowTracker.getWindowParameters()
-            windowTracker.getWindowFocus()
+            if (!isStatisticRun) {
+                close()
+            }
         }
     }
 
     Connections {
-        target: overlayMainWindow
+        target: statisticCollector
 
-        function onDeactivateOverlay() {
-            windowTracker.setWindowFocus()
+        function onFinished() {
+            console.log("QML FINISH")
+            isStatisticRun = false
+        }
+
+        function onStarted() {
+            console.log("QML STARTED")
+            isStatisticRun = true
         }
     }
 
-    Connections {
-        target: windowTracker
-
-        function onWindowPositionChanged(wX, wY) {
-            overlayMainWindow.changePosition(wX, wY)
-        }
-
-        function onWindowSizeChanged(wHeight, wWidth) {
-            overlayMainWindow.changeSize(wHeight, wWidth)
-        }
-
-        function onWindowOpenedChanged(isOpened) {
-            if (isOpened) {
-                overlayMainWindow.show()
-            } else {
-                overlayMainWindow.hide()
-            }
-        }
-
-        function onWindowFocusChanged(hasFocus) {
-            if (hasFocus) {
-                overlayMainWindow.show()
-            } else {
-                overlayMainWindow.hide()
-            }
-        }
-
-        function onWindowFullscreenChanged(isFullscreen) {
-            overlayMainWindow.setFullscreen(isFullscreen)
-        }
-
-        function onNewWindowBorders(nBorderWidth, nTitleBarHeight) {
-            overlayMainWindow.setWindowFrame(nTitleBarHeight, nBorderWidth)
-        }
+    Component.onCompleted: {
+        statisticCollector.start()
     }
 
+    onClosing: {
+        close.accepted = !isStatisticRun
 
+        closingTimer.start()
 
-    function showOverlay() {
-        /* Инициализация оверлея */
-        windowTracker.getWindowBorders()
-        var component = Qt.createComponent("qrc:/overlay/GameOverlay.qml")
-        overlayMainWindow = component.createObject()
-        overlayMainWindow.changePosition(-32000, -32000)
-        overlayMainWindow.show()
-        timer.start()
-    }
-
-    function hideOverlay() {
-        timer.stop()
-        overlay = Component.destruction()
-        //overlayMainWindow.hide()
-        //windowTracker.resetWindowTracker();
+        if (isStatisticRun) {
+            statisticCollector.stop()
+        }
     }
 }

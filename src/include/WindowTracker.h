@@ -4,6 +4,8 @@
 #include <QObject>
 #include <windows.h>
 #include <tchar.h>
+#include <winuser.h>
+#include <QDebug>
 
 #define WINDOW_NAME "VimeWorld"
 

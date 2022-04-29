@@ -4,35 +4,54 @@
 /// \brief run - Запускает поток обработки статистики.
 ///
 void StatisticCollector::run() {
-    qDebug() << "Statistic Collecotr Thread Run";
-
     /* Подключаем сигналы к слотам (Обрабатываем события чата) */
     connect(chatProcessing, SIGNAL(coinsAdded(const int)), this, SLOT(onCoinsAdded(const int)));
     connect(chatProcessing, SIGNAL(playerJoinedMatch(const QString, const QString)), this, SLOT(onPlayerJoinedMatch(QString, const QString)));
     connect(chatProcessing, SIGNAL(endMatch()), this, SLOT(onEndMatch()));
+    connect(chatProcessing, SIGNAL(finished()), this, SLOT(onChatProcessingFinished()));
+    connect(chatProcessing, SIGNAL(started()), this, SLOT(onChatProcessingStarted()));
 
-    while (1) {
-        // Ждать 1 секунду
+    isRunning = true;
+
+    while (isRunning || chatProcessingRunning) {
         QThread::msleep(1000);
     }
 
-    exec();
+    return;
 }
 
+///
+/// \brief stopStatisticCollector - Останавливает поток сбора статистики.
+///
+void StatisticCollector::stop() {
+    qDebug() << "Запрос остановки обработчика статистики";
+    isRunning = false;
+
+    chatProcessing->requestInterruption();
+}
+
+
 void StatisticCollector::startChatProcessing() {
-    if (!chatProcessingActive) {
-        chatProcessingActive = true;
+    if (!chatProcessingRunning) {
         chatProcessing->start();
     }
 }
 
 void StatisticCollector::stopChatProcessing() {
-    if (chatProcessingActive) {
-        chatProcessingActive = false;
+    if (chatProcessingRunning) {
+        // Запрос остановки обработчика логов чата
         chatProcessing->requestInterruption();
     }
 }
 
+void StatisticCollector::onChatProcessingFinished() {
+    qDebug() << "Chat Processing FINISHED";
+    chatProcessingRunning = false;
+}
+
+void StatisticCollector::onChatProcessingStarted() {
+    chatProcessingRunning = true;
+}
 
 ///
 /// \brief onCoinsAdded - Обработчик добавления коинов.
