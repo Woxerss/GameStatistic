@@ -13,8 +13,6 @@ ChatProcessing::ChatProcessing(const QString& filePath)
 /// \brief run - Запускает поток обработки чата.
 ///
 void ChatProcessing::run() {
-    qDebug() << "Chat Processing Thread Run";
-
     if (!QFile::exists(chatFilePath)) {
         qDebug() << "ERROR/t" << "File doesnt exist";
         return;

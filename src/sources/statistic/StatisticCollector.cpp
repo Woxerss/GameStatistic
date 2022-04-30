@@ -1,90 +1,98 @@
 #include "statistic/StatisticCollector.h"
 
 ///
+/// \brief StatisticCollector - Конструктор StatisticCollector.
+///
+StatisticCollector::StatisticCollector() {
+
+    logFile.setFileName("statistic.log");
+
+    if (logFile.open(QFile::WriteOnly | QFile::Truncate)) {
+        QTextStream temp(&logFile);
+        log.setDevice(&logFile);
+
+        writeLog("INIT", "Statistic Collector log started");
+    }
+
+}
+
+///
 /// \brief run - Запускает поток обработки статистики.
+/// \details Испускает сигнал started() при запуске.
 ///
 void StatisticCollector::run() {
-    isRunning = true;
+    isStatisticCollectorRunning = true;
+    writeLog("THREAD", "Statistic Collector thread running");
 
-    /* Подключаем сигналы к слотам (Обрабатываем события чата) */
-    connect(chatProcessing, SIGNAL(coinsAdded(const int)), this, SLOT(onCoinsAdded(const int)));
-    connect(chatProcessing, SIGNAL(playerJoinedMatch(const QString, const QString)), this, SLOT(onPlayerJoinedMatch(QString, const QString)));
-    connect(chatProcessing, SIGNAL(endMatch()), this, SLOT(onEndMatch()));
     connect(chatProcessing, SIGNAL(finished()), this, SLOT(onChatProcessingFinished()));
     connect(chatProcessing, SIGNAL(started()), this, SLOT(onChatProcessingStarted()));
 
-    while (isRunning || chatProcessingRunning) {
+    while (isStatisticCollectorRunning || isChatProcessingRunning) {
         QThread::msleep(1000);
     }
+
+    writeLog("THREAD", "Statistic Collector thread finished");
 }
 
 ///
-/// \brief stopStatisticCollector - Останавливает поток сбора статистики.
+/// \brief stop - Останавливает поток обработки статистики.
+/// \details Испускается сигнал finished() при остановке потока.
 ///
 void StatisticCollector::stop() {
-    qDebug() << "Запрос остановки обработчика статистики";
-    isRunning = false;
-
-    chatProcessing->requestInterruption();
-}
-
-
-void StatisticCollector::startChatProcessing() {
-    if (!chatProcessingRunning) {
-        chatProcessing->start();
+    if (isStatisticCollectorRunning) {
+        writeLog("THREAD", "Statistic Collector thread requested to stop");
+        isStatisticCollectorRunning = false;
     }
-}
 
-void StatisticCollector::stopChatProcessing() {
-    if (chatProcessingRunning) {
-        // Запрос остановки обработчика логов чата
+    if (isChatProcessingRunning) {
+        writeLog("THREAD", "Chat Processing thread requested to stop");
         chatProcessing->requestInterruption();
     }
 }
 
-void StatisticCollector::onChatProcessingFinished() {
-    qDebug() << "Chat Processing FINISHED";
-    chatProcessingRunning = false;
+///
+/// \brief startChatProcessing - Запускает поток обработки логов чата.
+/// \details Испускается сигнал started() при запуске.
+///
+void StatisticCollector::startChatProcessing() {
+    if (!isChatProcessingRunning) {
+        writeLog("THREAD", "Chat Processing thread requested to start");
+        chatProcessing->start();
+    }
 }
 
+///
+/// \brief stopChatProcessing - Завершает поток обработки чата.
+/// \details Испускается сигнал finished() при остановке потока.
+///
+void StatisticCollector::stopChatProcessing() {
+    if (isChatProcessingRunning) {
+        writeLog("THREAD", "Chat Processing thread requested to stop");
+        chatProcessing->requestInterruption();
+    }
+}
+
+///
+/// \brief writeLog - Записывает сообщение в лог файл.
+/// \param type - Тип сообщения.
+/// \param message - Текст сообщения.
+///
+void StatisticCollector::writeLog(const QString& type, const QString& message) {
+    log << '[' << (QTime::currentTime()).toString("HH:mm:ss") << "] " << type << ": " << message << Qt::endl;
+}
+
+///
+/// \brief onChatProcessingFinished - Обрабатывает сигнал finished() объекта ChatProcessing.
+///
 void StatisticCollector::onChatProcessingStarted() {
-    chatProcessingRunning = true;
+    writeLog("THREAD", "Chat Processing thread started");
+    isChatProcessingRunning = true;
 }
 
 ///
-/// \brief onCoinsAdded - Обработчик добавления коинов.
-/// \param coins - Количество полученных коинов.
+/// \brief onChatProcessingFinished - Обрабатывает сигнал started() объекта ChatProcessing.
 ///
-void StatisticCollector::onCoinsAdded(const int coins) {
-    sessionCoins += coins;
-    qDebug() << "Received:" << coins << "Total:" << sessionCoins;
-}
-
-///
-/// \brief onPlayerJoinedMatch - Обработчик присоединения игроков к матчу.
-/// \param ratio - Соотношение [Присоединившиеся/Общее кол-во мест].
-/// \param nickname - Никнейм игрока.
-///
-void StatisticCollector::onPlayerJoinedMatch(QString ratio, const QString nickname) {
-    QStringList playersCount;
-    playersCount = ratio.split('/');
-
-    if (!isMatch) {
-        isMatch = true;
-        qDebug() << "MATCH STARTED";
-    }
-
-    qDebug() << playersCount[0] << playersCount[1] << nickname;
-}
-
-///
-/// \brief onEndMatch - Обработчик конца матча.
-///
-void StatisticCollector::onEndMatch() {
-    if (isMatch) {
-        isMatch = false;
-        qDebug() << "MATCH ENDED";
-    } else {
-        qDebug() << "Вы были перемещены в лобби";
-    }
+void StatisticCollector::onChatProcessingFinished() {
+    writeLog("THREAD", "Chat Processing thread finished");
+    isChatProcessingRunning = false;
 }
