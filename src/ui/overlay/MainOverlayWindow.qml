@@ -20,7 +20,7 @@ Window {
 
     color: "#00000000"
 
-    flags: Qt.ToolTip | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.WindowTransparentForInput
+    flags: Qt.ToolTip | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint /*| Qt.WindowTransparentForInput*/
 
     title: "VA_MainOverlay"
 
@@ -66,34 +66,46 @@ Window {
         target: windowTracker
 
         function onWindowOpenedChanged(value) {
+            console.log("Window opened changed")
             isGameOpened = value;
         }
 
         function onWindowPositionChanged(nX, nY) {
+            console.log("Window Pos changed")
             x = nX;
             y = nY;
         }
 
         function onWindowSizeChanged(nHeight, nWidth) {
-            height = nHeight;
-            width = nWidth;
+            console.log("Window Size changed")
+            height = 100; //nHeight;
+            width = 100; //nWidth;
         }
 
         function onWindowFocusChanged(value) {
+            if (value === true) {
+                root.show()
+            } else {
+                root.hide()
+            }
 
+            console.log("Window Focus changed")
         }
 
         function onWindowFullscreenChanged(value) {
+            console.log("Window Fullscreen changed")
             isFullscreen = value
         }
 
         function onNewWindowBorders(nTitleBarHeight, nBorderWidth) {
+            console.log("Window Borders changed")
             titleBarHeight = nTitleBarHeight
             borderWidth = nBorderWidth
         }
     }
 
     Component.onCompleted: {
+        overlayUpdateTimer.start()
         console.log("Overlay started")
     }
 

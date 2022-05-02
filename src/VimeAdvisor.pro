@@ -1,16 +1,17 @@
 QT += quick
-
+QT += network
 LIBS += -lUser32
 
 CONFIG += c++17
 
-
 HEADERS += \
+    include/client/Client.h \
     include/statistic/ChatProcessing.h \
     include/statistic/StatisticCollector.h \
     include/WindowTracker.h
 
 SOURCES += \
+    sources/client/Client.cpp \
     sources/statistic/ChatProcessing.cpp \
     sources/statistic/StatisticCollector.cpp \
     sources/WindowTracker.cpp \

@@ -8,6 +8,7 @@
 #include <QTime>
 
 #include "statistic/ChatProcessing.h"
+#include "client/Client.h"
 
 class StatisticCollector : public QThread
 {
@@ -17,7 +18,7 @@ public:
     ///
     /// \brief StatisticCollector - Конструктор StatisticCollector.
     ///
-    StatisticCollector();
+    explicit StatisticCollector();
 
 public slots:
     ///
@@ -65,6 +66,7 @@ private slots:
 private:
     QString chatLogFilePath = "C:/Users/Malee/AppData/Roaming/.vimeworld/minigames/logs/latest.log";
     ChatProcessing* chatProcessing = new ChatProcessing(chatLogFilePath);
+    Client* client = new Client(this);
 
     bool isStatisticCollectorRunning = false;           // Поток обработки статистики запущен
     bool isChatProcessingRunning = false;               // Поток обработки чата запущен

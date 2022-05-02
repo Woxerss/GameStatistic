@@ -4,7 +4,6 @@
 /// \brief StatisticCollector - Конструктор StatisticCollector.
 ///
 StatisticCollector::StatisticCollector() {
-
     logFile.setFileName("statistic.log");
 
     if (logFile.open(QFile::WriteOnly | QFile::Truncate)) {
@@ -13,7 +12,6 @@ StatisticCollector::StatisticCollector() {
 
         writeLog("INIT", "Statistic Collector log started");
     }
-
 }
 
 ///

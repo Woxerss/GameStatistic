@@ -14,7 +14,7 @@ public:
     /// \brief ChatProcessing - Конструктор ChatProcessing.
     /// \param filePath - Путь к файлу с логами чата.
     ///
-    ChatProcessing(const QString& filePath);
+    explicit ChatProcessing(const QString& filePath);
 
 public slots:
     ///
