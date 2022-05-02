@@ -1,7 +1,6 @@
 #ifndef STATISTICCOLLECTOR_H
 #define STATISTICCOLLECTOR_H
 
-#include <QThread>
 #include <QObject>
 #include <QDebug>
 #include <QFile>
@@ -10,7 +9,7 @@
 #include "statistic/ChatProcessing.h"
 #include "client/Client.h"
 
-class StatisticCollector : public QThread
+class StatisticCollector : public QObject
 {
     Q_OBJECT
 
@@ -18,21 +17,9 @@ public:
     ///
     /// \brief StatisticCollector - Конструктор StatisticCollector.
     ///
-    explicit StatisticCollector();
+    explicit StatisticCollector(QObject *parent = nullptr);
 
 public slots:
-    ///
-    /// \brief run - Запускает поток обработки статистики.
-    /// \details Испускается сигнал started() при запуске.
-    ///
-    void run();
-
-    ///
-    /// \brief stop - Останавливает поток обработки статистики.
-    /// \details Испускается сигнал finished() при остановке потока.
-    ///
-    void stop();
-
     ///
     /// \brief startChatProcessing - Запускает поток обработки логов чата.
     /// \details Испускается сигнал started() при запуске.
@@ -65,10 +52,10 @@ private slots:
 
 private:
     QString chatLogFilePath = "C:/Users/Malee/AppData/Roaming/.vimeworld/minigames/logs/latest.log";
-    ChatProcessing* chatProcessing = new ChatProcessing(chatLogFilePath);
-    Client* client = new Client(this);
 
-    bool isStatisticCollectorRunning = false;           // Поток обработки статистики запущен
+    ChatProcessing* chatProcessing = new ChatProcessing(chatLogFilePath);
+    Client* client;
+
     bool isChatProcessingRunning = false;               // Поток обработки чата запущен
 
     QFile logFile;

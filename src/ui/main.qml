@@ -120,6 +120,25 @@ ApplicationWindow {
                 }
             }
         }
+
+        TextField {
+            id: textField
+            height: 60
+            width: 200
+        }
+
+        Button {
+            height: 60
+            width: 140
+
+            opacity: (isChatProcessing) ? 0.5 : 1
+
+            text: "SendRequest"
+
+            onClicked: {
+                statisticCollector.sendRequest(this, textField.text)
+            }
+        }
     }
 
     Timer {
@@ -135,23 +154,23 @@ ApplicationWindow {
         }
     }
 
-    Connections {
-        target: statisticCollector
+//    Connections {
+//        target: statisticCollector
 
-        function onFinished() {
-            console.log("QML FINISH")
-            isStatisticRun = false
-        }
+//        function onFinished() {
+//            console.log("QML FINISH")
+//            isStatisticRun = false
+//        }
 
-        function onStarted() {
-            console.log("QML STARTED")
-            isStatisticRun = true
-        }
-    }
+//        function onStarted() {
+//            console.log("QML STARTED")
+//            isStatisticRun = true
+//        }
+//    }
 
     Component.onCompleted: {
         overlayComponent = Qt.createComponent("qrc:/overlay/MainOverlayWindow.qml")
-        statisticCollector.start()
+        //statisticCollector.start()
     }
 
     onClosing: {

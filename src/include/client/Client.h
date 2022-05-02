@@ -1,39 +1,21 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QEventLoop>
-#include <QThread>
+#include <QObject>
 
-class Client : public QThread
+#include "client/RequestQueue.h"
+#include "client/RequestSender.h"
+
+class Client : public QObject
 {
     Q_OBJECT
-
 public:
     ///
     /// \brief Client - Конструктор Client.
     ///
     explicit Client(QObject *parent = nullptr);
 
-private slots:
-    ///
-    /// \brief makeConnect - Связывает сигнал finished со слотом передаваемого объекта.
-    /// \param object - Объект, к которому необходимо привязать сигнал.
-    ///
-    void makeConnection(QObject* object);
-
-    ///
-    /// \brief breakConnect - Разрывает связь сигнала finished со слотом передаваемого объекта.
-    /// \param object - Объект, от которого необходимо отвязать сигнал.
-    ///
-    void breakConnection(QObject* object);
-
-    ///
-    /// \brief sendRequest - Посылает HTTP запрос.
-    /// \param sender - Отправитель
-    /// \param method - Метод запроса
-    ///
+public slots:
     void sendRequest(QObject* sender, QString method);
 
 private slots:
@@ -44,14 +26,10 @@ private slots:
     void onRequestFinished(QNetworkReply* reply);
 
 signals:
-    ///
-    /// \brief endRequest - Сигнал, который вызывается при получении ответа QNetworkReply.
-    ///
-    void endRequest();
 
 private:
-    QString hostname = "https://api.vimeworld.com/";
-    QNetworkAccessManager * manager;
+    RequestQueue* requestQueue;
+    RequestSender* requestSender;
 };
 
 #endif // CLIENT_H

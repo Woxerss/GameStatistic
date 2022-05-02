@@ -3,7 +3,10 @@
 ///
 /// \brief StatisticCollector - Конструктор StatisticCollector.
 ///
-StatisticCollector::StatisticCollector() {
+StatisticCollector::StatisticCollector(QObject *parent)
+    : QObject{parent}
+{
+    // Включаем логирование
     logFile.setFileName("statistic.log");
 
     if (logFile.open(QFile::WriteOnly | QFile::Truncate)) {
@@ -12,40 +15,17 @@ StatisticCollector::StatisticCollector() {
 
         writeLog("INIT", "Statistic Collector log started");
     }
-}
 
-///
-/// \brief run - Запускает поток обработки статистики.
-/// \details Испускает сигнал started() при запуске.
-///
-void StatisticCollector::run() {
-    isStatisticCollectorRunning = true;
-    writeLog("THREAD", "Statistic Collector thread running");
-
+    // Соединяем обработчик чата
     connect(chatProcessing, SIGNAL(finished()), this, SLOT(onChatProcessingFinished()));
     connect(chatProcessing, SIGNAL(started()), this, SLOT(onChatProcessingStarted()));
 
-    while (isStatisticCollectorRunning || isChatProcessingRunning) {
-        QThread::msleep(1000);
-    }
+    // Инициализируем клиент
+    client = new Client(this);
 
-    writeLog("THREAD", "Statistic Collector thread finished");
-}
-
-///
-/// \brief stop - Останавливает поток обработки статистики.
-/// \details Испускается сигнал finished() при остановке потока.
-///
-void StatisticCollector::stop() {
-    if (isStatisticCollectorRunning) {
-        writeLog("THREAD", "Statistic Collector thread requested to stop");
-        isStatisticCollectorRunning = false;
-    }
-
-    if (isChatProcessingRunning) {
-        writeLog("THREAD", "Chat Processing thread requested to stop");
-        chatProcessing->requestInterruption();
-    }
+    client->sendRequest(this, "online");
+    client->sendRequest(this, "online");
+    client->sendRequest(this, "online");
 }
 
 ///
@@ -83,7 +63,7 @@ void StatisticCollector::writeLog(const QString& type, const QString& message) {
 /// \brief onChatProcessingFinished - Обрабатывает сигнал finished() объекта ChatProcessing.
 ///
 void StatisticCollector::onChatProcessingStarted() {
-    writeLog("THREAD", "Chat Processing thread started");
+    writeLog("CHAT", "Chat Processing thread started");
     isChatProcessingRunning = true;
 }
 
@@ -91,6 +71,6 @@ void StatisticCollector::onChatProcessingStarted() {
 /// \brief onChatProcessingFinished - Обрабатывает сигнал started() объекта ChatProcessing.
 ///
 void StatisticCollector::onChatProcessingFinished() {
-    writeLog("THREAD", "Chat Processing thread finished");
+    writeLog("CHAT", "Chat Processing thread finished");
     isChatProcessingRunning = false;
 }
