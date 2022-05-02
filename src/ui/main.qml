@@ -128,6 +128,7 @@ ApplicationWindow {
         }
 
         Button {
+            id: but1
             height: 60
             width: 140
 
@@ -136,7 +137,22 @@ ApplicationWindow {
             text: "SendRequest"
 
             onClicked: {
-                //statisticCollector.sendRequest(this, textField.text)
+                statisticCollector.sendRequest(this, textField.text)
+            }
+
+            function onTransmitInformation(msg: string) : string {
+                var JsonObject = JSON.parse(msg);
+                console.log(msg)
+
+                console.log(JsonObject.total)
+
+                if (JsonObject.separated.an === undefined) {
+                    console.log("true")
+                } else {
+                    console.log("false")
+                }
+
+                console.log(JsonObject.separated.an)
             }
         }
     }

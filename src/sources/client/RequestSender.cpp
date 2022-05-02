@@ -14,9 +14,6 @@ RequestSender::RequestSender(QObject *parent)
     resetTimer->start();
 
     connect(resetTimer, SIGNAL(timeout()), this, SIGNAL(reset()));
-
-    sendRequest(this, "test");
-    sendRequest(this, "test");
 }
 
 ///

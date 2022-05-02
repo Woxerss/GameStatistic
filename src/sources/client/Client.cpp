@@ -27,8 +27,14 @@ Client::Client(QObject *parent)
 /// \brief onNewReply - Обработчик сигнала finished объекта QNetworkAccessManager.
 ///
 void Client::onNewReply(QNetworkReply* reply) {
-    QString answer = reply->readAll();
-    qDebug() << answer;
+    // Присоединяем сигнал передачи информации к слоту объекта отправителя запроса
+    connect(this, SIGNAL(transmitInformation(QString)), reply->request().originatingObject(), SLOT(onTransmitInformation(QString)));
+
+    // Вызываем сигнал передачи информации
+    emit transmitInformation(reply->readAll());
+
+    // Отсоединяем сигнал передачи информации к слоту объекта отправителя запроса
+    disconnect(this, SIGNAL(transmitInformation(QString)), reply->request().originatingObject(), SLOT(onTransmitInformation(QString)));
 
     reply->deleteLater();
 }

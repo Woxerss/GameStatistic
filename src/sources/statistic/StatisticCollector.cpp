@@ -22,8 +22,10 @@ StatisticCollector::StatisticCollector(QObject *parent)
 
     // Инициализируем клиент
     client = new Client(this);
+}
 
-    client->getUsersByName(this, {"Woxerss", "xtrafrancyz"});
+void StatisticCollector::sendRequest(QObject* sender) {
+    client->getOnline(sender);
 }
 
 ///

@@ -2,6 +2,8 @@
 #define CLIENT_H
 
 #include <QObject>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include "client/RequestQueue.h"
 #include "client/RequestSender.h"
@@ -182,6 +184,9 @@ private slots:
     /// \brief reply - Ответ на запрос. Необходимо удалить ВРУЧНУЮ
     ///
     void onNewReply(QNetworkReply* reply);
+
+signals:
+    void transmitInformation(QString);
 
 private:
     RequestQueue* requestQueue;

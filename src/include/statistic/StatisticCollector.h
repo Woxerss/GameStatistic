@@ -32,6 +32,8 @@ public slots:
     ///
     void stopChatProcessing();
 
+    void sendRequest(QObject* sender);
+
 private slots:
     ///
     /// \brief writeLog - Записывает сообщение в лог файл.
