@@ -136,7 +136,7 @@ ApplicationWindow {
             text: "SendRequest"
 
             onClicked: {
-                statisticCollector.sendRequest(this, textField.text)
+                //statisticCollector.sendRequest(this, textField.text)
             }
         }
     }

@@ -23,9 +23,7 @@ StatisticCollector::StatisticCollector(QObject *parent)
     // Инициализируем клиент
     client = new Client(this);
 
-    client->sendRequest(this, "online");
-    client->sendRequest(this, "online");
-    client->sendRequest(this, "online");
+    client->getUsersByName(this, {"Woxerss", "xtrafrancyz"});
 }
 
 ///

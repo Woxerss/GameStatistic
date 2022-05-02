@@ -18,18 +18,6 @@ public:
 
 public slots:
     ///
-    /// \brief makeConnect - Связывает сигнал finished со слотом передаваемого объекта.
-    /// \param object - Объект, к которому необходимо привязать сигнал.
-    ///
-    void makeConnection(QObject* object);
-
-    ///
-    /// \brief breakConnect - Разрывает связь сигнала finished со слотом передаваемого объекта.
-    /// \param object - Объект, от которого необходимо отвязать сигнал.
-    ///
-    void breakConnection(QObject* object);
-
-    ///
     /// \brief sendRequest - Посылает HTTP запрос.
     /// \param sender - Отправитель
     /// \param method - Метод запроса
@@ -44,6 +32,11 @@ private slots:
     void onRequestFinished(QNetworkReply* reply);
 
 signals:
+    ///
+    /// \brief newReply - Сигнал, который вызывается после первичной обработки ответа.
+    ///
+    void newReply(QNetworkReply* reply);
+
     ///
     /// \brief endRequest - Сигнал, который вызывается при получении ответа QNetworkReply.
     ///
