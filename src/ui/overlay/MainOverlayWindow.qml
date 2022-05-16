@@ -20,7 +20,7 @@ Window {
 
     color: "#00000000"
 
-    flags: Qt.ToolTip | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint /*| Qt.WindowTransparentForInput*/
+    flags: Qt.ToolTip | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint //| Qt.WindowTransparentForInput
 
     title: "VA_MainOverlay"
 
@@ -28,28 +28,28 @@ Window {
         id: windowTracker
     }
 
-//    Rectangle {
-//        id: rect
+    Rectangle {
+        id: rect
 
-//        color: "red"
+        color: "red"
 
-//        opacity: 0.5
+        opacity: 0.5
 
-//        anchors {
-//            fill: parent
+        anchors {
+            fill: parent
 
-//            margins: (isFullscreen) ? 0 : borderWidth
-//            topMargin: (isFullscreen) ? 0 : titleBarHeight
-//        }
-//    }
-
-    Button {
-        text: "Test Button"
-
-        onClicked: {
-            windowTracker.setWindowFocus()
+            margins: (isFullscreen) ? 0 : borderWidth
+            topMargin: (isFullscreen) ? 0 : titleBarHeight
         }
     }
+
+//    Button {
+//        text: "Test Button"
+
+//        onClicked: {
+//            windowTracker.setWindowFocus()
+//        }
+//    }
 
     Timer {
         id: overlayUpdateTimer
@@ -78,8 +78,8 @@ Window {
 
         function onWindowSizeChanged(nHeight, nWidth) {
             console.log("Window Size changed")
-            height = 100; //nHeight;
-            width = 100; //nWidth;
+            height = nHeight;
+            width = nWidth;
         }
 
         function onWindowFocusChanged(value) {

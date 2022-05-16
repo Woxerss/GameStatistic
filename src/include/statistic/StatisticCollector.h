@@ -32,8 +32,6 @@ public slots:
     ///
     void stopChatProcessing();
 
-    void sendRequest(QObject* sender);
-
 private slots:
     ///
     /// \brief writeLog - Записывает сообщение в лог файл.
@@ -54,8 +52,9 @@ private slots:
 
 private:
     QString chatLogFilePath = "C:/Users/Malee/AppData/Roaming/.vimeworld/minigames/logs/latest.log";
+    //QString chatLogFilePath = "D:/!GitClones/VimeAdvisor/src/log.txt";
 
-    ChatProcessing* chatProcessing = new ChatProcessing(chatLogFilePath);
+    ChatProcessing* chatProcessing;
     Client* client;
 
     bool isChatProcessingRunning = false;               // Поток обработки чата запущен

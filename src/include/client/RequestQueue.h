@@ -34,6 +34,11 @@ private slots:
     ///
     void onReset();
 
+    ///
+    /// \brief onRequestError - Обрабатывает сигнал ошибки.
+    ///
+    void onRequestError();
+
 signals:
     ///
     /// \brief newRequest - Сигнал, который вызывается при передаче нового http запроса.

@@ -37,6 +37,7 @@ void RequestSender::onRequestFinished(QNetworkReply* reply) {
         emit newLog("REQUEST", "ERROR OCCURED: " + reply->errorString());
         reply->deleteLater();
 
+        emit requestError();
         emit endRequest();
         return;
     }

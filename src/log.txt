@@ -1,0 +1,18 @@
+[20:36:03] [Client thread/INFO]: [CHAT] Добавлено коинов: 1
+[20:36:10] [Client thread/INFO]: [CHAT] Маньяк убил игрока 1ms
+[20:36:12] [Client thread/INFO]: [CHAT] XxEnderman17xX проиграл в русской рулетке
+[20:37:56] [Client thread/INFO]: [CHAT] <North> [H] tonlan_135: спс
+[20:37:57] [Client thread/INFO]: [CHAT] _Batya_Bezika_2: spsibo
+[20:38:22] [Client thread/INFO]: [CHAT] [H] qwllyna: треш
+[20:38:26] [Client thread/INFO]: [CHAT] [H] qwllyna: класс
+[20:38:41] [Client thread/INFO]: [CHAT] Вы были перемещены в лобби
+
+[20:40:26] [Client thread/INFO]: [CHAT] havtza: донатер
+[20:40:30] [Client thread/INFO]: [CHAT] <sbtg> [nuuu] _Ac3Cube_: ну да
+[20:40:37] [Client thread/INFO]: [CHAT] <sbtg> [nuuu] _Ac3Cube_: напиши + в чат если достать
+[20:40:38] [Client thread/INFO]: [CHAT] + [dev] iTNG вошел в лобби!
+[20:40:58] [Client thread/INFO]: [CHAT] <sbtg> [nuuu] _Ac3Cube_: ок сама вылезешь
+[20:41:01] [Client thread/INFO]: [CHAT] + [sw67] skydragonDead вошел в лобби!
+[20:41:24] [Client thread/INFO]: [CHAT] + [2005] Bear_Black_Magik вошел в лобби!
+[20:41:24] [Client thread/INFO]: [CHAT] <sbtg> [nuuu] _Ac3Cube_: не слышу спасибо ну
+[20:41:34] [Client thread/INFO]: [CHAT] SuperKirill222: е

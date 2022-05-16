@@ -1,6 +1,7 @@
 #ifndef CHATPROCESSING_H
 #define CHATPROCESSING_H
 
+#include <QRegExp>
 #include <QThread>
 #include <QDebug>
 #include <QFile>

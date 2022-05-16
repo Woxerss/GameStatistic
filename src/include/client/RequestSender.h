@@ -43,6 +43,11 @@ signals:
     void endRequest();
 
     ///
+    /// \brief requestError - Сигнал, который вызывается при ошибке QNetworkReply.
+    ///
+    void requestError();
+
+    ///
     /// \brief reset - Сигнал, который вызывается при обновлении таймера оставшихся запросов.
     ///
     void reset();

@@ -79,6 +79,35 @@ ApplicationWindow {
         id: statisticCollector
     }
 
+    Rectangle {
+        id: rectA
+
+        height: 20
+        width: 20
+
+        radius: 10
+
+        color: "red"
+
+        anchors {
+            right: parent.right
+            top: parent.top
+
+            margins: 20
+        }
+
+        Timer {
+            id: colorTimer
+            repeat: false
+
+            interval: 50
+
+            onTriggered: {
+                rectA.color = "red"
+            }
+        }
+    }
+
     Column {
         anchors.centerIn: parent
         spacing: 5
@@ -125,12 +154,16 @@ ApplicationWindow {
             id: textField
             height: 60
             width: 200
+
+            text: ""
         }
 
         Button {
             id: but1
             height: 60
             width: 140
+
+            property int intA: 0
 
             opacity: (isChatProcessing) ? 0.5 : 1
 
@@ -142,17 +175,12 @@ ApplicationWindow {
 
             function onTransmitInformation(msg: string) : string {
                 var JsonObject = JSON.parse(msg);
-                console.log(msg)
+                console.log(intA++)
 
-                console.log(JsonObject.total)
+                rectA.color = "black"
+                colorTimer.start()
 
-                if (JsonObject.separated.an === undefined) {
-                    console.log("true")
-                } else {
-                    console.log("false")
-                }
-
-                console.log(JsonObject.separated.an)
+                textField.text = "Total:" + JsonObject.total + "  Ann:" + JsonObject.separated.ann + "  Bb:" + JsonObject.separated.bb + "  Bp:" + JsonObject.separated.bp
             }
         }
     }

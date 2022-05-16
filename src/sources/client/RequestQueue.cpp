@@ -21,7 +21,6 @@ void RequestQueue::run() {
             remainingRequest--;
         }
 
-
         if (requestQueue.size() > 0 && remainingRequest == 0) {
             while(remainingRequest == 0) {
                 QThread::msleep(1000);
@@ -42,6 +41,15 @@ void RequestQueue::add(QObject* sender, QString method) {
 
     if (!this->isRunning()) {
         this->start();
+    }
+}
+
+///
+/// \brief onRequestError - Обрабатывает сигнал ошибки.
+///
+void RequestQueue::onRequestError() {
+    if (remainingRequest < 60) {
+        remainingRequest++;
     }
 }
 

@@ -16,16 +16,15 @@ StatisticCollector::StatisticCollector(QObject *parent)
         writeLog("INIT", "Statistic Collector log started");
     }
 
+    // Инициализируем обработчик чата
+    chatProcessing = new ChatProcessing(chatLogFilePath);
+
     // Соединяем обработчик чата
     connect(chatProcessing, SIGNAL(finished()), this, SLOT(onChatProcessingFinished()));
     connect(chatProcessing, SIGNAL(started()), this, SLOT(onChatProcessingStarted()));
 
     // Инициализируем клиент
     client = new Client(this);
-}
-
-void StatisticCollector::sendRequest(QObject* sender) {
-    client->getOnline(sender);
 }
 
 ///

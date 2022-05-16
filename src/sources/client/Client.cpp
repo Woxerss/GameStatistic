@@ -21,6 +21,7 @@ Client::Client(QObject *parent)
     // Связываем очередь запросов и клиент
     connect(requestQueue, SIGNAL(newRequest(QObject*,QString)), requestSender, SLOT(sendRequest(QObject*,QString)));
     connect(requestSender, SIGNAL(reset()), requestQueue, SLOT(onReset()));
+    connect(requestSender, SIGNAL(requestError()), requestQueue, SLOT(onRequestError()));
 }
 
 ///
